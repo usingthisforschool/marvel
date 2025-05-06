@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IMDb Rating Search</title>
+  <link rel="stylesheet" href="./static/style.css" />
+</head>
+<body>
+
+  <div class="reviewBox">
+    <h1>Search for IMDb Ratings</h1>
+      <!-- Whatever the user types, will be stored as movieTitle id, for the OMDB api to search -->
+    <input type="text" id="movieTitle" placeholder="Enter a movie title..." />
+      <!-- on click, calls the function searchMovie(), which -->
+    <button onclick="searchMovie()">Search</button>
+
+    <div class="result" id="resultBox" style="display: none;" >
+      <h2 id="movieName"></h2>
+      <p id="movieRating"></p>
+      <p id="moviePlot"></p>
+      <img id="moviePoster" src="" alt="Movie Poster" style="max-width: 200px; display: none;" />
+    </div>
+  </div>
+
+  <script>
+    const apiKey = ""; // Replace with your OMDB API key, https://www.omdbapi.com/
+
+// aforementioned function, used to grab the "movieTitle" and cleans it up by trimming potential whitespace, storing
+// it as a constant called title, if nothing was written, just return
+
+    async function searchMovie() {
+      const title = document.getElementById("movieTitle").value.trim();
+      if (!title) return;
+
+// creating constants for retuning data
+      const resultBox = document.getElementById("resultBox");
+      const name = document.getElementById("movieName");
+      const rating = document.getElementById("movieRating");
+      const plot = document.getElementById("moviePlot");
+      const poster = document.getElementById("moviePoster");
+
+
+// clears any potential data from being displayed while searching, sets "Searching..." as a loading sceen.
+
+      name.innerText = "";
+      rating.innerText = "Searching...";
+      plot.innerText = "";
+      poster.style.display = "none";
+
+      resultBox.style.display = "block";
+
+ // Using fetch to do a HTTP search, using encodeURIComponent to structure the title in a url format, and await for
+ // response back
+      try {
+        const res = await fetch(`https://www.omdbapi.com/?t=${encodeURIComponent(title)}&apikey=${apiKey}`);
+        const data = await res.json();
+
+    // if no movie was found display this error
+
+        if (data.Response === "False") {
+          name.innerText = "Movie not found";
+          rating.innerText = "";
+          poster.style.display = "none";
+          plot.innerText = "";
+        }
+
+        else {
+          name.innerText = data.Title;
+          rating.innerText = `IMDb Rating: ${data.imdbRating}`;
+          plot.innerText = data.Plot;
+
+          if (data.Poster && data.Poster !== "N/A") {
+            poster.src = data.Poster;
+            poster.style.display = "block";
+          }
+
+          else {
+            poster.style.display = "none";
+            poster.src = "";
+          }
+        }
+      } catch (err) {
+        name.innerText = "Error";
+        rating.innerText = "Could not fetch data.";
+        plot.innerText = "";
+        poster.style.display = "none";
+      }
+    }
+  </script>
+
+</body>
+</html>
