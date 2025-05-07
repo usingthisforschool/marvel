@@ -35,6 +35,7 @@
       const title = document.getElementById("movieTitle").value.trim();
       if (!title) return;
 
+
 // creating constants for retuning data
       const resultBox = document.getElementById("resultBox");
       const name = document.getElementById("movieName");
@@ -59,6 +60,7 @@
         const data = await res.json();
 
     // if no movie was found display this error
+
 
         if (data.Response === "False") {
           name.innerText = "Movie not found";
