@@ -37,3 +37,11 @@ All marvel movies, shows and everything from past present and future: [Click Her
 - X-Men'97(old seasons, new rewatch)
 - Morbius
 - Blade, Blade II, Blade Trinity
+
+## How to use Search Function
+First, You'll need an API key from [OMDB](https://www.omdbapi.com/) 
+
+after that navigate to SearchForMovie.html and look for
+> const apiKey = "";
+
+and put your key in there.
